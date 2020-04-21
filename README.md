@@ -7,7 +7,7 @@ This GitHub repo is for an academic conference submission, it includes the intro
 Language: ```Python```. Python Libraries (to run the program): ```numpy```, ```pandas```
 
 # Usage
-Workflow: example_PPI.txt (input file) => ExactL3_cmd.py => example_PPI_ExactL3_1.txt (output file)
+**Workflow: example_PPI.txt (input file) => ExactL3_cmd.py => example_PPI_ExactL3_1.txt (output file)**
 
 To run ExactL3_cmd.py in the terminal (assume Windows, cmd):
 ```python ExactL3_cmd.py {input file path} {output file path} {link predictor} {number of CPU core}```
