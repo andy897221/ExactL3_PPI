@@ -1,0 +1,1 @@
+This docs is to include the clean and simple mathematical definitions of our defined link predictors (rather than having programmers to work with the codes to understand it). This page will be updated once our work is accepted.
