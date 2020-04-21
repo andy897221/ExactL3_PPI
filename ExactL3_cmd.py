@@ -21,6 +21,9 @@ if __name__ == "__main__":
     elif method == "L3":
         scoreArgs = {}
         algor = "L3uvJoin"
+    elif method == "CN":
+        scoreArgs = {}
+        algor = "commonNeighbor"
     else:
         print("link predictor '{}' is invalid.".format(method))
         exit()
