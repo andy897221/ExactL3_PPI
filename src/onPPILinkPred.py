@@ -174,7 +174,7 @@ def CARBased_Scoring(samplePPIr, nodeX, nodeY, scoringMethod):
         score = CAR(samplePPIr, nodeX, nodeY)
     return score
 
-def _PPILinkPred(nodePairs, samplePPIr, scoringMethod, scoreArgs, logging=False):
+def _PPILinkPred(nodePairs, samplePPIr, scoringMethod, scoreArgs=[], logging=False):
     scores, predictedPPIbrs = [], []
     count, lastCount, total, avgTime = 0, 0, len(nodePairs), 0
     for nodePair in nodePairs:
