@@ -19,7 +19,7 @@ Language: ```Python```. Python Libraries (to run the program): ```numpy```, ```p
 
 * Supported Link Predictors: ```ExactL3_1```, ```ExactL3_2```, ```L3```, ```CN```
 
-The input file is a tab-delimited .csv file with no header, where there are two columns. The number of rows is the number of PPIs, and for each row the two columns of that row induce an non-directional PPI (each item is a protein). For example, a row A\tB implies protein 'A' and protein 'B' has a PPI.
+The input file is a tab-delimited .csv file with no header, where there are two columns. The number of rows is the number of PPIs, and for each row the two columns of that row induce an non-directional PPI (each item is a protein). For example, a row ```A\tB``` implies protein 'A' and protein 'B' has a PPI.
 
 For examples to work with our Python script, see ```./example.py```. Documentations are included as comments in the script.
 
