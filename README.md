@@ -1,7 +1,9 @@
 # ExactL3_PPI
 The ExactL3 formulations are some better normalized link predictions for Protein-Protein Interaction (PPI) Networks.
 
-This GitHub repo is for an academic conference submission, it includes the introduced algorithms, the experiments to generate all the results data, a jupyter notebook that formats all the result images, and a command-line script to run ExactL3_1, ExactL3_2, and the original L3 link predictor (Kovács, 2019).
+**This GitHub repo is from our work that is currently submitting for publications / under review**
+
+This repo includes the introduced algorithms, the experiments to generate all the results data, a jupyter notebook that formats all the result images, and a command-line script to run ExactL3_1, ExactL3_2, and the original L3 link predictor (Kovács, 2019).
 
 # Requirement
 Language: ```Python```. Python Libraries (to run the program): ```numpy```, ```pandas```
