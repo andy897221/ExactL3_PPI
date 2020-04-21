@@ -23,4 +23,4 @@ For examples to work with our Python script, see ```./example.py```. Documentati
 The data in our paper is generated using the script ```./src/notebook/dataGen.py```, and the images in our paper are generated based on our generated data using the jupyter notebook ```./src/notebook/ppiLPred.ipynb```. Note that except the parsed datasets in ```./src/data/parsed/```, no data is included since it is too large (roughly > 100 GB).
 
 # Docs
-For more explanation how our python functions realize the algorithm, see [here](docs/docs.md)
+For more explanations how our python functions realize the algorithm, see [here](docs/docs.md)
