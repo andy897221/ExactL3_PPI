@@ -11,13 +11,15 @@ Language: ```Python```. Python Libraries (to run the program): ```numpy```, ```p
 # Usage
 **Workflow: example_PPI.txt (input file) => ExactL3_cmd.py => example_PPI_ExactL3_1.txt (output file)**
 
-To run ExactL3_cmd.py in the terminal (assume Windows, cmd):
+* To run ExactL3_cmd.py in the terminal (assume Windows, cmd):
 ```python ExactL3_cmd.py {input file path} {output file path} {link predictor} {number of CPU core}```
 
-Example to run ExactL3_1:
+* Example to run ExactL3_1:
 ```python ExactL3_cmd.py ./example_PPI.txt ./example_PPI_ExactL3_1.txt ExactL3_1 1```
 
-Supported Link Predictors: ```ExactL3_1```, ```ExactL3_2```, ```L3```, ```CN```
+* Supported Link Predictors: ```ExactL3_1```, ```ExactL3_2```, ```L3```, ```CN```
+
+The input file is a tab-delimited .csv file with no header, where there are two columns. The number of rows is the number of PPIs, and for each row the two column of that row induce an non-directional PPI (each item is a protein). For example, a row A\tB implies protein 'A' and protein 'B' has a PPI.
 
 For examples to work with our Python script, see ```./example.py```. Documentations are included as comments in the script.
 
