@@ -82,7 +82,7 @@ class ns:
     br_str = tr.Helper.br_to_pathStr
     L3Scoring = ["L3Normalizing", "L3uvJoin", "L3Raw"]
     L2Scoring = ["commonNeighbor"]
-    CARBasedScoring = ["CRA", "CAR"]
+    CARBasedScoring = ["CRA", "CAR", "CH2_L3"]
     interStrScoring = ["interStr"]
     normFuncMapping = {"sqrt": math.sqrt, "log":math.log, "none": lambda x: x, "null": lambda x: 1}
     uvSpecMapping = {"basic": helperFunc.uvSpec_basic, "linear": helperFunc.uvSpec_linear, "noPad": helperFunc.uvSpec_noPad, "null": lambda node, classNodes, PPIr: 1}
@@ -167,11 +167,24 @@ def CAR(samplePPIr, nodeX, nodeY):
     for node in cn: score += len(samplePPIr[node]&cn)/2
     return len(cn)*score
 
+def CH2_L3(samplePPIr, nodeX, nodeY):
+    uvPair, _, _ = get_uv(nodeX, nodeY, samplePPIr, uvJoin=True)
+    U, V = [uv[0] for uv in uvPair], [uv[1] for uv in uvPair]
+    localCommunity = U|V
+    score = 0
+    for [u, v] in uvPair:
+        numerator = math.sqrt((1+len(samplePPIr[u]&localCommunity))*(1+len(samplePPIr[v]&localCommunity)))
+        denominator = math.sqrt((1+len(samplePPIr[u]-localCommunity))*(1+len(samplePPIr[v]-localCommunity)))
+        score += numerator/denominator
+    return score
+
 def CARBased_Scoring(samplePPIr, nodeX, nodeY, scoringMethod):
     if scoringMethod == 'CRA':
         score = CRA(samplePPIr, nodeX, nodeY)
     if scoringMethod == 'CAR':
         score = CAR(samplePPIr, nodeX, nodeY)
+    if scoringMethod == "CH2_L3":
+        score = CH2_L3(samplePPIr, nodeX, nodeY)
     return score
 
 def _PPILinkPred(nodePairs, samplePPIr, scoringMethod, scoreArgs=[], logging=False):
