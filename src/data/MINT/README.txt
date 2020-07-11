@@ -1,1 +1,1 @@
-downloaded from https://mint.bio.uniroma2.it/index.php/download/, Saccharomyces Cerevisiae
+downloaded from https://mint.bio.uniroma2.it/index.php/download/, Saccharomyces Cerevisiae and Homo sapiens

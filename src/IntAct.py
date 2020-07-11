@@ -97,11 +97,10 @@ def parse_IntAct(folderName="./data/IntAct/yeast/", root="./"
     df['nodeB'] = pd.Series(["".join(node.split("_YEAST")) for node in df['nodeB']]).values
     df.reset_index(inplace=True, drop=True)
 
-    # print(set(list(df['type'])))
     # {'physical association', 'methylation', 'association', 'colocalization', 'disulfide bond', 'phosphorylation', 'dephosphorylation', 'deubiquitination', 'enzymatic reaction', 'direct interaction'}
 
-    ppi_df = df[df['type'].isin(["physical association", "association", "colocalization", "direct interaction"])].copy()
-    ggi_df = df[~df['type'].isin(["physical association", "association", "colocalization", "direct interaction"])].copy()
+    ppi_df = df[df['type'].isin(["physical association", "association", "direct interaction"])].copy()
+    ggi_df = df[~df['type'].isin(["physical association", "association", "direct interaction"])].copy()
     ppi_df.reset_index(inplace=True, drop=True)
     ggi_df.reset_index(inplace=True, drop=True)
 
@@ -111,10 +110,10 @@ def parse_IntAct(folderName="./data/IntAct/yeast/", root="./"
 
 
 if __name__ == "__main__":
-    ggi_df, ppi_df = parse_IntAct()
-    print(ppi_df.head())
-    print(ggi_df.head())
-    print(len(ggi_df.index), len(ppi_df.index))
+    # ggi_df, ppi_df = parse_IntAct()
+    # print(ppi_df.head())
+    # print(ggi_df.head())
+    # print(len(ggi_df.index), len(ppi_df.index))
     ggi_df, ppi_df = parse_IntAct(spokeModel=True)
     print(ppi_df.head())
     print(ggi_df.head())

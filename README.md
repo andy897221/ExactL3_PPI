@@ -1,30 +1,30 @@
 # ExactL3_PPI
-The ExactL3 formulations are some better normalized link predictions for Protein-Protein Interaction (PPI) Networks.
+ExactL3 is a better normalized link predictor for Protein-Protein Interaction (PPI) Networks.
 
 **This GitHub repo is from our work that is currently submitting for publications / under review**
 
-This repo includes the introduced algorithms, the experiments to generate all the results data, a jupyter notebook that formats all the result images, and a command-line script to run ExactL3_1, ExactL3_2, and the original L3 link predictor (Kovács, 2019).
+This repo includes the introduced algorithms, the experiments to generate all the results data, a jupyter notebook that formats all the result images, and a command-line script to run ExactL3 and various link predictors for PPI networks.
 
 # Requirement
 Language: ```Python```. Python Libraries (to run the program): ```numpy```, ```pandas```
 
 # Usage
-**Workflow: example_PPI.txt (input file) => ExactL3_cmd.py => example_PPI_ExactL3_1.txt (output file)**
+**Workflow: example_PPI.txt (input file) => ExactL3_cmd.py => example_PPI_ExactL3.txt (output file)**
 
 * To run ExactL3_cmd.py in the terminal (assume Windows, cmd):
 ```python ExactL3_cmd.py {input file path} {output file path} {link predictor} {number of CPU core}```
 
 * Example to run ExactL3_1:
-```python ExactL3_cmd.py ./example_PPI.txt ./example_PPI_ExactL3_1.txt ExactL3_1 1```
+```python ExactL3_cmd.py ./example_PPI.txt ./example_PPI_ExactL3.txt ExactL3 1```
 
-* Supported Link Predictors: ```ExactL3_1```, ```ExactL3_2```, ```L3```, ```CN```
+* Supported Link Predictors (see the paper for reference / details): ```ExactL3```, ```L3```, ```CN```, ```CRA```, ```Sim```, ```CH2_L3```
 
 The input file is a tab-delimited .csv file with no header, where there are two columns. The number of rows is the number of PPIs, and for each row the two columns of that row induce an non-directional PPI (each item is a protein). For example, a row ```A\tB``` implies protein 'A' and protein 'B' has a PPI.
 
 For examples to work with our Python script, see ```./example.py```. Documentations are included as comments in the script.
 
 # Misc
-The data in our paper is generated using the script ```./src/notebook/dataGen.py```, and the images in our paper are generated based on our generated data using the jupyter notebook ```./src/notebook/ppiLPred.ipynb```. Note that except the parsed datasets in ```./src/data/parsed/```, no data is included since it is too large (roughly > 100 GB).
+The data in our paper is generated using the script ```./src/notebook/dataGen_Yeast.py``` and ```dataGen_Human.py```, and the images in our paper are generated based on our generated data using the jupyter notebook ```./src/notebook/ppiLPred_BIBE2020_Yeast.ipynb``` and ```ppiLPred_BIBE2020_homo.ipynb```. Note that except the parsed datasets in ```./src/data/parsed/``` and generated sample PPI datasets ```./src/genData/```, no data is included since it is too large (roughly 700 GB).
 
 # Docs
 For more explanations how our python functions realize the algorithm, see [here](docs/docs.md)

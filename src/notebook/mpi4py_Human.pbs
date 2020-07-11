@@ -1,0 +1,49 @@
+#! /bin/bash
+### Update your variables Begin
+
+# Job name is "ppiLPred"
+#PBS -N ppiLPred
+# Number of nodes is 2 and CPU core per node is 12
+#PBS -l nodes=1:ppn=24
+# Walltime is 1 day (day:hour:minute)
+#PBS -l walltime=72:00:00
+# Memory per job is 128GB
+#PBS -l mem=128g
+# Job queue name is "h05gen1"
+#PBS -q h05gen1
+EXEC=dataGen_Human.py
+OUTFILE=dataGen.out
+MODULEFILES="Anaconda3-2019.03 openmpi-3.0.3-gcc-5.5.0"
+
+### Update your variables End
+
+### PBS Setting Begin
+
+NP=`cat $PBS_NODEFILE | wc -l`
+NN=`cat $PBS_NODEFILE | sort | uniq | tee /tmp/nodes.$$ | wc -l`
+cat $PBS_NODEFILE > /tmp/nodefile.$$
+ARG1='btl_tcp_if_include bond0'
+ARG2="python3"
+### PBS Setting End
+
+### Main Begin
+
+module load $MODULEFILES
+
+echo "process will start at : "
+date
+cd $PBS_O_WORKDIR
+mpirun -n $NP -mca $ARG1 $ARG2 $EXEC > $OUTFILE
+echo "process end at : "
+date
+
+module unload $MODULEFILES
+
+### Main Begin
+
+### Post setting Begin
+
+rm -f /tmp/nodefile.$$
+rm -f /tmp/nodes.$$
+
+### Post setting End

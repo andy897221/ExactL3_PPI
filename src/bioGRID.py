@@ -58,4 +58,13 @@ def parse_geneName_map(filename="./data/BioGRID/BIOGRID-ORGANISM-Saccharomyces_c
     return geneMap, reverseGeneMap
 
 if __name__ == "__main__":
-    parse_bioGRID()
+    ggi_df, ppi_df = parse_bioGRID()
+    print(ppi_df.head())
+    print(ggi_df.head())
+    print(len(ggi_df.index), len(ppi_df.index))
+
+    ggi_df, ppi_df = parse_bioGRID(filename='./data/BioGRID/BIOGRID-ORGANISM-Homo_sapiens-3.5.187.tab2.txt', root='./'
+    , wFile_GGI='./data/parsed/BioGRID_homo_GGI.pkl', wFile_PPI='./data/parsed/BioGRID_homo_PPI.pkl')
+    print(ppi_df.head())
+    print(ggi_df.head())
+    print(len(ggi_df.index), len(ppi_df.index))

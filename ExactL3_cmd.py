@@ -12,18 +12,20 @@ if __name__ == "__main__":
     ppi_df = pd.read_csv(ppiFile, sep="\t", header=None)
     ppi_br = ppi_df[[0,1]].values.tolist()
 
-    if method == "ExactL3_1":
+    scoreArgs = {}
+    if method == "ExactL3":
         scoreArgs = {'xyContrib': 'basic', 'dualCN': 'basic', 'uvJoin': 'basic'}
         algor = "interStr"
-    elif method == "ExactL3_2":
-        scoreArgs = {'xyContrib': 'basic', 'uvSpec': 'basic', 'xySpec': 'basic', 'uvJoin': 'basic'}
-        algor = "interStr"
     elif method == "L3":
-        scoreArgs = {}
         algor = "L3uvJoin"
     elif method == "CN":
-        scoreArgs = {}
         algor = "commonNeighbor"
+    elif method == "CH2_L3":
+        algor = "CH2_L3"
+    elif method == "Sim":
+        algor = "Sim"
+    elif method == "CRA":
+        algor = "CRA"
     else:
         print("link predictor '{}' is invalid.".format(method))
         exit()

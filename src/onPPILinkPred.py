@@ -80,7 +80,7 @@ class ns:
     arr_pStr = tr.Helper.list_to_pathStrs
     pStr_arr = tr.Helper.pathStrs_to_list
     br_str = tr.Helper.br_to_pathStr
-    L3Scoring = ["L3Normalizing", "L3uvJoin", "L3Raw"]
+    L3Scoring = ["L3Normalizing", "L3uvJoin", "L3Raw", "Sim"]
     L2Scoring = ["commonNeighbor"]
     CARBasedScoring = ["CRA", "CAR", "CH2_L3"]
     interStrScoring = ["interStr"]
@@ -140,6 +140,15 @@ def interStr_Scoring(samplePPIr, nodeX, nodeY, scoringMethod, scoreArgs):
     score *= xySpec(nodeX, classU, samplePPIr)*xySpec(nodeY, classV, samplePPIr)
     return score
 
+def Sim(samplePPIr, nodeX, nodeY, uvPair):
+    nodeUs, nodeVs = set([uv[0] for uv in uvPair]), set([uv[1] for uv in uvPair])
+    score = 0
+    for v in nodeVs:
+        score += helperFunc.dualCN(nodeX, v, samplePPIr)
+    for u in nodeUs:
+        score += helperFunc.dualCN(nodeY, u, samplePPIr)
+    return score
+
 def L3_Scoring(samplePPIr, nodeX, nodeY, scoringMethod):
     if scoringMethod == "L3Normalizing":
         uvPair, candidateUs, candidateVs = get_uv(nodeX, nodeY, samplePPIr)
@@ -150,6 +159,9 @@ def L3_Scoring(samplePPIr, nodeX, nodeY, scoringMethod):
     elif scoringMethod == "L3Raw":
         uvPair, candidateUs, candidateVs = get_uv(nodeX, nodeY, samplePPIr, uvJoin=True)
         score = L3_normalization(samplePPIr, uvPair, lambda x: 1)
+    elif scoringMethod == "Sim":
+        uvPair, candidateUs, candidateVs = get_uv(nodeX, nodeY, samplePPIr, uvJoin=True)
+        score = Sim(samplePPIr, nodeX, nodeY, uvPair)
     return score
 
 def L2_Scoring(samplePPIr, nodeX, nodeY, scoringMethod):
@@ -169,14 +181,15 @@ def CAR(samplePPIr, nodeX, nodeY):
 
 def CH2_L3(samplePPIr, nodeX, nodeY):
     uvPair, _, _ = get_uv(nodeX, nodeY, samplePPIr, uvJoin=True)
-    U, V = [uv[0] for uv in uvPair], [uv[1] for uv in uvPair]
+    U, V = set([uv[0] for uv in uvPair]), set([uv[1] for uv in uvPair])
     localCommunity = U|V
     score = 0
     for [u, v] in uvPair:
         numerator = math.sqrt((1+len(samplePPIr[u]&localCommunity))*(1+len(samplePPIr[v]&localCommunity)))
-        denominator = math.sqrt((1+len(samplePPIr[u]-localCommunity))*(1+len(samplePPIr[v]-localCommunity)))
+        denominator = math.sqrt((1+len(samplePPIr[u]-localCommunity-{nodeX, nodeY}))*(1+len(samplePPIr[v]-localCommunity-{nodeX, nodeY})))
         score += numerator/denominator
     return score
+
 
 def CARBased_Scoring(samplePPIr, nodeX, nodeY, scoringMethod):
     if scoringMethod == 'CRA':
@@ -232,6 +245,51 @@ def multiCore_PPILinkPred(samplePPIbr, scoringMethod, scoreArgsDict, coreNo, top
     else: logging = [False for i in range(coreNo)]
     args = (nodePairs, splitStartIndex, splitEndIndex, samplePPIr, scoringMethod, scoreArgs, logging, PPIresQ)
     func = partial(_multiCore_handler, args)
+    with Pool(coreNo) as p:
+        p.map(func, [i for i in range(coreNo)])
+    if logging: print("\n")
+    mergedScores, mergedPPIbrs = [], []
+    PPIresL = [PPIresQ.get() for i in range(coreNo)]
+    for [predictedPPIbr, scores] in PPIresL:
+        mergedScores += scores
+        mergedPPIbrs += predictedPPIbr
+
+    sortedPPIbrs, sortedScores = hr.sort_key_val(mergedPPIbrs, mergedScores)
+    if topNo is None: topNo = len(sortedPPIbrs)
+    topPredPPIbrs = sortedPPIbrs[0:topNo]
+    topScores = sortedScores[0:topNo]
+    return topPredPPIbrs, topScores
+
+def _multiCore_handler_shared(args, iterable):
+    (PPIdataQ, samplePPIr, scoringMethod, scoreArgs, logging, PPIresQ) = args
+    nodePairs = PPIdataQ.get()
+    logging = logging[iterable]
+    scores, predictedPPIbrs = _PPILinkPred(nodePairs, samplePPIr, scoringMethod, scoreArgs, logging)
+    PPIresQ.put([predictedPPIbrs, scores])
+    return
+
+def multiCore_PPILinkPred_shared(samplePPIbr, scoringMethod, scoreArgsDict, coreNo, topNo=None, logging=False, nodePairs=None):
+    # @param scoreArgs: dict, assign the normalization functions (normFunc, uvSpec, xySpec, uvContrib, xyContrib, dualCN)
+    normOrder = ['normFunc', 'uvSpec', 'xySpec', 'uvContrib', 'xyContrib', 'dualCN', 'uvJoin']
+    scoreArgs = ['null' if normTag not in scoreArgsDict else scoreArgsDict[normTag] for normTag in normOrder]
+
+    samplePPIr = ns.BRToRelat(ns.toDualBR(samplePPIbr), rSet=True)
+    sampleNodes = ns.BRToNode(samplePPIbr)
+    if nodePairs is None: nodePairs = list(combinations(sampleNodes, 2))
+
+    splitStartIndex = [i*math.floor(len(nodePairs)/coreNo) for i in range(0, coreNo)] # both splitting is correct
+    splitEndIndex = [(i+1)*math.floor(len(nodePairs)/coreNo) if i != coreNo-1 else len(nodePairs) for i in range(0, coreNo)]
+    mgr, dataMgr = Manager(), Manager()
+    PPIdataQ, PPIresQ = dataMgr.Queue(), mgr.Queue()
+    if logging: logging = [True if i == 0 else False for i in range(coreNo)]
+    else: logging = [False for i in range(coreNo)]
+
+    for i in range(len(splitStartIndex)):
+        PPIdataQ.put(nodePairs[splitStartIndex[i]:splitEndIndex[i]])
+    nodePairs = None
+
+    args = (PPIdataQ, samplePPIr, scoringMethod, scoreArgs, logging, PPIresQ)
+    func = partial(_multiCore_handler_shared, args)
     with Pool(coreNo) as p:
         p.map(func, [i for i in range(coreNo)])
     if logging: print("\n")

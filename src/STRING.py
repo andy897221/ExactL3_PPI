@@ -65,7 +65,14 @@ if __name__ == "__main__":
     ggi_df, ppi_df = parse_STRING()
     # print(set(list(STRING_GGI['type'])))
     # {'catalysis', 'ptmod', 'inhibition', 'activation', 'reaction', 'expression'}
+    print(ppi_df.head())
+    print(ggi_df.head())
+    print(len(ggi_df.index), len(ppi_df.index))
 
+    ggi_df, ppi_df = parse_STRING(ppiFile='./data/STRING/9606.protein.links.v11.0.txt'
+    , typeFile='./data/STRING/9606.protein.actions.v11.0.txt'
+    , uniProtMap='./data/UniProt/uniprot-taxonomy_9606_STRING.tab', root='./'
+    , wFile_GGI='./data/parsed/STRING_homo_GGI.pkl', wFile_PPI='./data/parsed/STRING_homo_PPI.pkl')
     print(ppi_df.head())
     print(ggi_df.head())
     print(len(ggi_df.index), len(ppi_df.index))
