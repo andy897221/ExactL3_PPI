@@ -14,7 +14,7 @@ Language: ```Python```. Python Libraries (to run the program): ```numpy```, ```p
 * To run ExactL3_cmd.py in the terminal (assume Windows, cmd):
 ```python ExactL3_cmd.py {input file path} {output file path} {link predictor} {number of CPU core}```
 
-* Example to run ExactL3_1:
+* Example to run ExactL3:
 ```python ExactL3_cmd.py ./example_PPI.txt ./example_PPI_ExactL3.txt ExactL3 1```
 
 * Supported Link Predictors (see the paper for reference / details): ```ExactL3```, ```L3```, ```CN```, ```CRA```, ```Sim```, ```CH2_L3```
