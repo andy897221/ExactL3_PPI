@@ -1,7 +1,7 @@
 # ExactL3_PPI
 ExactL3 is a better normalized link predictor for Protein-Protein Interaction (PPI) Networks.
 
-**This GitHub repo is from our work that is currently submitting for publications / under review**
+Published at IEEE-BIBIE 2020, awarded with the Best Bioinformatics Paper Award, link: https://doi.org/10.1109/BIBE50027.2020.00017
 
 This repo includes the introduced algorithms, the experiments to generate all the results data, a jupyter notebook that formats all the result images, and a command-line script to run ExactL3 and various link predictors for PPI networks.
 
